@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Amalgamation Network</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { overflow: auto; }
+    #app { height: auto; min-height: 100vh; }
+
+    .page-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+    }
+
+    .project-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: var(--text-dim); }
+
+    .project-header {
+      padding: 20px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .project-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .project-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .project-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .project-people-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .project-toggle {
+      font-size: 18px;
+      color: var(--text-dim);
+      transition: transform 0.2s;
+    }
+    .project-card.open .project-toggle { transform: rotate(90deg); }
+
+    .project-body {
+      display: none;
+      padding: 0 24px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .project-card.open .project-body { display: block; }
+
+    .project-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-dim);
+      margin: 16px 0;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      margin-bottom: 16px;
+      transition: color 0.2s;
+    }
+    .project-link:hover { color: var(--text); }
+
+    .people-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .person-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+    }
+    .person-chip:hover {
+      border-color: var(--text-dim);
+      background: var(--border);
+    }
+
+    .person-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .person-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .person-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .person-role-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tier-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .tier-badge.core { background: var(--accent); color: #0a0a0f; }
+    .tier-badge.go-to { background: var(--accent2); color: #0a0a0f; }
+    .tier-badge.network { background: var(--border); color: var(--text); }
+    .tier-badge.org { background: var(--bg); color: var(--text-dim); border: 1px solid var(--border); }
+    .tier-badge.client { background: var(--bg); color: var(--accent3); border: 1px solid var(--accent3); }
+    .tier-badge.festival { background: var(--bg); color: #FFE082; border: 1px solid #FFE082; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <div class="header-left">
+        <h1 class="logo">AMALGAMATION<span class="logo-accent">_NET</span></h1>
+        <span class="subtitle">Project View</span>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <a href="index.html" class="back-link">← Back to Network</a>
+      <h2 class="page-title">Projects</h2>
+      <p class="page-subtitle">Collaborative works linking people across the network</p>
+      <div id="projects-list"></div>
+    </div>
+  </div>
+
+  <script src="network-data.js"></script>
+  <script src="projects.js"></script>
+</body>
+</html>
