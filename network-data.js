@@ -4682,6 +4682,11 @@ const CONNECTIONS = [
   { source: "phoebe-jane-hart", target: "sundance", strength: 2, label: "Bug Diner (Jury Award 2024)" },
   { source: "flora-anna-buda", target: "sundance", strength: 2, label: "Screened" },
   { source: "maks-rzontkowski", target: "sundance", strength: 2, label: "Screened" },
+  { source: "maks-rzontkowski", target: "annecy", strength: 2, label: "Screened" },
+  { source: "maks-rzontkowski", target: "pictoplasma", strength: 2, label: "Screened" },
+  { source: "maks-rzontkowski", target: "ottawa-festival", strength: 3, label: "Best Student Film" },
+  { source: "chris-rutledge", target: "maks-rzontkowski", strength: 2, label: "Friend" },
+  { source: "maks-rzontkowski", target: "adult-swim", strength: 2, label: "Screened" },
 
   // Maks Rzontkowski
 
