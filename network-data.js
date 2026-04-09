@@ -3285,6 +3285,37 @@ const PEOPLE = [
     image: null,
   },
 
+  // ── Pariah Interactive ───────────────────────────────────────
+
+  {
+    id: "pariah-interactive",
+    name: "Pariah Interactive",
+    tier: "org",
+    role: "Game Studio",
+    org: "Pariah Interactive",
+    description: "Independent game studio.",
+    tags: ["game-dev", "production"],
+    website: null,
+    instagram: null,
+    followers: null,
+    location: null,
+    image: null,
+  },
+  {
+    id: "prashast-thapan",
+    name: "Prashast Thapan",
+    tier: "network",
+    role: "Game Developer / Founder",
+    org: "Pariah Interactive",
+    description: "Founder of Pariah Interactive. RISD alum.",
+    tags: ["game-dev", "technical-direction"],
+    website: null,
+    instagram: null,
+    followers: null,
+    location: null,
+    image: null,
+  },
+
   // ── Rainbow Water / NGU new people ────────────────────────
 
   {
@@ -4814,6 +4845,13 @@ const CONNECTIONS = [
   // Jesper — Tumblehead collaborator
   { source: "jesper-lindahl", target: "tumblehead", strength: 2, label: "Collaborator" },
   { source: "amalgamation", target: "jesper-lindahl", strength: 1, label: "Network" },
+
+  // Pariah Interactive
+  { source: "prashast-thapan", target: "pariah-interactive", strength: 3, label: "Founder" },
+  { source: "prashast-thapan", target: "risd", strength: 2, label: "Alum" },
+  { source: "chris-rutledge", target: "prashast-thapan", strength: 2, label: "Friend" },
+  { source: "amalgamation", target: "pariah-interactive", strength: 1, label: "Network" },
+  { source: "amalgamation", target: "prashast-thapan", strength: 1, label: "Network" },
 
   // Rainbow Water crew (new)
   { source: "amalgamation", target: "eusebi-jucgla", strength: 1, label: "Network" },
