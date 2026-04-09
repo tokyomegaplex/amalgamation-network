@@ -80,7 +80,7 @@ const PROJECTS = [
     description: "Animated short for Adult Swim's Off the Air (GROWTH episode). Co-directed by Chris & Daniel Rutledge.",
     url: "https://www.youtube.com/watch?v=trArVB67sok",
     thumb: "https://img.youtube.com/vi/trArVB67sok/hqdefault.jpg",
-    people: ["chris-rutledge", "daniel-rutledge", "vernon-chatman", "tumblehead"],
+    people: ["chris-rutledge", "daniel-rutledge", "vernon-chatman", "tumblehead", "sasa-budimir"],
   },
   {
     id: "netflix-project",
@@ -4347,6 +4347,10 @@ const CONNECTIONS = [
   { source: "amalgamation", target: "kate-renshaw-lewis", strength: 1, label: "Network" },
   { source: "amalgamation", target: "arius-ziaee", strength: 1, label: "Network" },
   { source: "amalgamation", target: "sasa-budimir", strength: 1, label: "Network" },
+  { source: "sasa-budimir", target: "street-race", strength: 2, label: "Street Race" },
+  { source: "sasa-budimir", target: "tumblehead", strength: 2, label: "Collaborator" },
+  { source: "chris-rutledge", target: "sasa-budimir", strength: 2, label: "Collaborator" },
+  { source: "sasa-budimir", target: "sidefx", strength: 2, label: "Houdini" },
   { source: "amalgamation", target: "joseph-melhuish", strength: 1, label: "Network" },
   { source: "amalgamation", target: "umami", strength: 1, label: "Network" },
   { source: "amalgamation", target: "lena-greene", strength: 1, label: "Network" },
@@ -4510,6 +4514,8 @@ const CONNECTIONS = [
   { source: "jack-wedge", target: "laser-days", strength: 3, label: "Co-founder" },
   { source: "chippy", target: "laser-days", strength: 2, label: "Frequent collaborator" },
   { source: "chippy", target: "brthr", strength: 2, label: "Frequent collaborator" },
+  { source: "chippy", target: "ottawa-festival", strength: 2, label: "Screened" },
+  { source: "chippy", target: "pictoplasma", strength: 2, label: "Screened" },
 
   // Raman Djafari
   { source: "raman-djafari", target: "blinkink", strength: 3, label: "Repped by" },
