@@ -1041,14 +1041,13 @@
     if (isOpen) {
       projectsPanel.classList.add("hidden");
       projectsToggle.classList.remove("active");
+      panel.classList.remove("projects-open");
       activeProject = null;
       document.querySelectorAll(".proj-card").forEach(function(c) { c.classList.remove("active"); });
     } else {
-      // Close info panel if open
-      panel.classList.add("hidden");
-      selectedNode = null;
       projectsPanel.classList.remove("hidden");
       projectsToggle.classList.add("active");
+      panel.classList.add("projects-open");
     }
     scheduleDraw();
   });
@@ -1056,6 +1055,7 @@
   projectsClose.addEventListener("click", function() {
     projectsPanel.classList.add("hidden");
     projectsToggle.classList.remove("active");
+    panel.classList.remove("projects-open");
     activeProject = null;
     document.querySelectorAll(".proj-card").forEach(function(c) { c.classList.remove("active"); });
     projectsToggle.style.borderColor = "#2a2a3a";

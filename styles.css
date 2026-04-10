@@ -224,7 +224,12 @@ body {
   z-index: 200;
   overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  transition: opacity 0.25s, transform 0.25s;
+  transition: opacity 0.25s, transform 0.25s, right 0.25s;
+}
+
+/* Shift info panel left when projects panel is open */
+#info-panel.projects-open {
+  right: calc(360px + 24px + 12px);
 }
 
 #info-panel.hidden {
@@ -341,7 +346,7 @@ body {
 /* ═══════════ PROJECTS PANEL ═══════════ */
 #projects-panel {
   position: fixed;
-  left: 24px;
+  right: 24px;
   top: 50%;
   transform: translateY(-50%);
   width: 360px;
@@ -359,7 +364,7 @@ body {
 #projects-panel.hidden {
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-50%) translateX(-20px);
+  transform: translateY(-50%) translateX(20px);
 }
 
 #projects-close {
