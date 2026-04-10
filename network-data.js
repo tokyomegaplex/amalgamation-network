@@ -89,7 +89,7 @@ const PROJECTS = [
     description: "Unannounced show in development with Green Street Pictures. CG supervised by Chris Rutledge, produced by Ben Gloger, directed by Sean Buckelew.",
     url: null,
     thumb: null,
-    people: ["chris-rutledge", "ben-gloger", "chippy", "liam-archibald", "jack-jobling", "sara-drake", "carter-lodwick", "liz-walcher", "julia-snelman", "daniel-rutledge", "sean-buckelew", "green-street-pictures", "joey-carlino"],
+    people: ["chris-rutledge", "ben-gloger", "chippy", "liam-archibald", "jack-jobling", "sara-drake", "carter-lodwick", "liz-walcher", "julia-snelman", "daniel-rutledge", "sean-buckelew", "green-street-pictures", "joey-carlino", "david-delafuente"],
   },
   {
     id: "larry",
@@ -4427,6 +4427,8 @@ const CONNECTIONS = [
   { source: "amalgamation", target: "margaret-bialis", strength: 1, label: "Network" },
   { source: "amalgamation", target: "nick-deboar", strength: 1, label: "Network" },
   { source: "amalgamation", target: "david-delafuente", strength: 1, label: "Network" },
+  { source: "david-delafuente", target: "risd", strength: 2, label: "Alum" },
+  { source: "david-delafuente", target: "sean-buckelew", strength: 2, label: "Collaborator" },
   { source: "amalgamation", target: "lije-morgan", strength: 1, label: "Network" },
   { source: "amalgamation", target: "kohana-wilson", strength: 1, label: "Network" },
   { source: "amalgamation", target: "jake-rice", strength: 1, label: "Network" },
