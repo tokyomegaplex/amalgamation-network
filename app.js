@@ -1040,27 +1040,25 @@
     var isOpen = !projectsPanel.classList.contains("hidden");
     if (isOpen) {
       projectsPanel.classList.add("hidden");
+      projectsToggle.classList.remove("active");
       activeProject = null;
       document.querySelectorAll(".proj-card").forEach(function(c) { c.classList.remove("active"); });
-      projectsToggle.style.borderColor = "#2a2a3a";
-      projectsToggle.style.color = "#8888a0";
     } else {
       // Close info panel if open
       panel.classList.add("hidden");
       selectedNode = null;
       projectsPanel.classList.remove("hidden");
-      projectsToggle.style.borderColor = "#ff6b6b";
-      projectsToggle.style.color = "#ff6b6b";
+      projectsToggle.classList.add("active");
     }
     scheduleDraw();
   });
 
   projectsClose.addEventListener("click", function() {
     projectsPanel.classList.add("hidden");
+    projectsToggle.classList.remove("active");
     activeProject = null;
     document.querySelectorAll(".proj-card").forEach(function(c) { c.classList.remove("active"); });
     projectsToggle.style.borderColor = "#2a2a3a";
-    projectsToggle.style.color = "#8888a0";
     scheduleDraw();
   });
 
