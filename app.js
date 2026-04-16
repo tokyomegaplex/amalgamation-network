@@ -795,6 +795,14 @@
     document.getElementById("active-tags").textContent = activeTag || (searchQuery ? `"${searchQuery}"` : "all");
   }
 
+  // ─── Filters Toggle (mobile) ───────────────────────
+  const filtersToggle = document.getElementById("filters-toggle");
+  const tagFiltersEl = document.getElementById("tag-filters");
+  filtersToggle.addEventListener("click", () => {
+    const open = tagFiltersEl.classList.toggle("open");
+    filtersToggle.classList.toggle("active", open);
+  });
+
   // ─── Search ────────────────────────────────────────
   const searchInput = document.getElementById("search");
   searchInput.addEventListener("input", (e) => {
