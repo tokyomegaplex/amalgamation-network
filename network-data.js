@@ -4640,6 +4640,7 @@ const CONNECTIONS = [
   { source: "felipe-di-poi", target: "will-duncan", strength: 1, label: "Comedy world" },
   { source: "felipe-di-poi", target: "pierce-campion", strength: 1, label: "Comedy world" },
   { source: "felipe-di-poi", target: "adult-swim", strength: 1, label: "Shows" },
+  { source: "felipe-di-poi", target: "vernon-chatman", strength: 2, label: "Collaborator" },
 
   // Org connections
   { source: "laser-days", target: "hornet", strength: 2, label: "Repped by" },
