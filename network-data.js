@@ -4442,7 +4442,7 @@ const PEOPLE = [
     description: "Game developer and designer.",
     tags: ["game-dev"],
     website: "https://celineveltman.com/",
-    instagram: null,
+    instagram: "celineveltman",
     followers: null,
     location: null,
     image: null,
