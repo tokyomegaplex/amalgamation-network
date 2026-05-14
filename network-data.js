@@ -2530,7 +2530,7 @@ const PEOPLE = [
     website: "https://www.herrerasaurus.work/",
     instagram: "herrerasaurus",
     followers: null,
-    location: null,
+    location: "Australia",
     image: null,
   },
   {
