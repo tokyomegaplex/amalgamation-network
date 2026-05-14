@@ -4913,6 +4913,15 @@ const CONNECTIONS = [
   { source: "master-tingus", target: "pictoplasma", strength: 1, label: "Speaker (2025)" },
   { source: "jack-sachs", target: "pictoplasma", strength: 1, label: "Speaker" },
   { source: "conor-kehelly", target: "pictoplasma", strength: 1, label: "Speaker (2026)" },
+  { source: "tom-willby", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "dominik-johann", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "celine-veltman", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "billy-budgen", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "eliza-young", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "daniel-kehelly", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "jess-hererra", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "adrian-jaffe", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
+  { source: "andrew-onorato", target: "pictoplasma", strength: 2, label: "Pictoplasma" },
   { source: "joseph-melhuish", target: "pictoplasma", strength: 1, label: "Speaker" },
 
   // Pratt connections
