@@ -5,6 +5,9 @@
 (function () {
   const { PEOPLE, CONNECTIONS, PROJECTS, CATEGORY_COLORS, TIER_CONFIG } = window.NETWORK_DATA;
 
+  // ─── Device Detection ──────────────────────────────
+  const isMobile = window.innerWidth <= 640 || ('ontouchstart' in window);
+
   // ─── State ─────────────────────────────────────────
   let activeTag = null;
   let searchQuery = "";
@@ -17,6 +20,7 @@
   let dragOffset = { x: 0, y: 0 };
   let drawScheduled = false;
   let dpr = 1;
+  let simTickCount = 0;
 
   // ─── Canvas Setup ──────────────────────────────────
   const canvas = document.getElementById("graph-canvas");
@@ -25,7 +29,8 @@
 
   function resize() {
     const container = document.getElementById("graph-container");
-    dpr = window.devicePixelRatio || 1;
+    // Cap DPR: mobile → 1.5, desktop → 2 max (no need for 3x)
+    dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2);
     width = container.clientWidth;
     height = container.clientHeight;
     canvas.width = width * dpr;
@@ -83,11 +88,18 @@
   amalgamationVideo.style.display = "none";
   document.body.appendChild(amalgamationVideo);
   amalgamationVideo.play().catch(() => {});
-  // Drive continuous redraws while video is playing
-  (function videoTick() {
-    if (!amalgamationVideo.paused) scheduleDraw();
+  // Drive redraws while video is playing — cap to ~30fps on mobile
+  let lastVideoTick = 0;
+  (function videoTick(ts) {
+    if (!amalgamationVideo.paused) {
+      const minInterval = isMobile ? 33 : 0; // ~30fps on mobile, uncapped desktop
+      if (ts - lastVideoTick >= minInterval) {
+        lastVideoTick = ts;
+        scheduleDraw();
+      }
+    }
     requestAnimationFrame(videoTick);
-  })();
+  })(0);
 
   const links = CONNECTIONS.map(c => ({
     source: nodeMap[c.source],
@@ -126,8 +138,12 @@
     }))
     .force("x", d3.forceX(width / 2).strength(0.006))
     .force("y", d3.forceY(height / 2).strength(0.006))
-    .alphaDecay(0.006)
-    .on("tick", scheduleDraw);
+    .alphaDecay(isMobile ? 0.02 : 0.006)
+    .on("tick", () => {
+      // On mobile, only redraw every 2nd sim tick to halve CPU load
+      simTickCount++;
+      if (!isMobile || simTickCount % 2 === 0) scheduleDraw();
+    });
 
   // ─── Fuzzy Search ──────────────────────────────────
   function editDistance(a, b) {
@@ -211,6 +227,25 @@
     }
     if (!activeTag && !searchQuery) return TIER_CONFIG[node.tier]?.opacity || 0.8;
     return isNodeVisible(node) ? 1.0 : 0.08;
+  }
+
+  // ─── Mobile Blob (cheap blur alternative to metaballs) ─
+  function drawBlobsMobile() {
+    ctx.save();
+    if (typeof ctx.filter !== "undefined") ctx.filter = "blur(18px)";
+    nodes.forEach(node => {
+      const opacity = getNodeOpacity(node);
+      if (opacity < 0.15 || isNaN(node.x) || isNaN(node.y)) return;
+      const r = (TIER_CONFIG[node.tier]?.radius || 7) * 2.5;
+      ctx.globalAlpha = opacity * 0.3;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = node.primaryColor;
+      ctx.fill();
+    });
+    ctx.filter = "none";
+    ctx.globalAlpha = 1;
+    ctx.restore();
   }
 
   // ─── SDF Metaball Offscreen Buffer ─────────────────
@@ -320,8 +355,11 @@
     ctx.translate(transform.x, transform.y);
     ctx.scale(transform.k, transform.k);
 
-    // Draw SDF metaball blobs behind everything
-    if (!gridMode) drawMetaballs();
+    // Draw blobs behind everything — full metaballs on desktop, cheap blur on mobile
+    if (!gridMode) {
+      if (isMobile) drawBlobsMobile();
+      else drawMetaballs();
+    }
 
     // Draw links (skip in alphabetical mode, skip if either endpoint has invalid coords)
     if (!gridMode)
@@ -395,8 +433,8 @@
 
       ctx.globalAlpha = opacity;
 
-      // Glow for core/go-to
-      if ((config.glow || isHovered || isSelected || isAmalgamation) && opacity > 0.3) {
+      // Glow for core/go-to — skip on mobile unless selected/hovered (too expensive)
+      if ((config.glow || isHovered || isSelected || isAmalgamation) && opacity > 0.3 && (!isMobile || isSelected || isHovered)) {
         const gradient = ctx.createRadialGradient(node.x, node.y, glowR * 0.5, node.x, node.y, glowR * 2.5);
         gradient.addColorStop(0, isAmalgamation ? "rgba(255,215,0,0.18)" : hexToRgba(node.primaryColor, 0.25));
         gradient.addColorStop(1, "transparent");
@@ -655,6 +693,94 @@
     transform.k = newK;
 
     scheduleDraw();
+  }, { passive: false });
+
+  // ─── Touch Events ──────────────────────────────────
+  let touchStartPos = null;
+  let pinchStartDist = null;
+  let pinchStartK = null;
+
+  function getTouchPos(touch) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+  }
+
+  function touchDist(t1, t2) {
+    return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+  }
+
+  canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const pos = getTouchPos(e.touches[0]);
+      touchStartPos = { ...pos };
+      const node = getNodeAt(pos.x, pos.y);
+      if (node) {
+        dragging = node;
+        node.fx = node.x;
+        node.fy = node.y;
+        simulation.alphaTarget(0.3).restart();
+      } else {
+        dragOffset = { x: e.touches[0].clientX - transform.x, y: e.touches[0].clientY - transform.y };
+      }
+    } else if (e.touches.length === 2) {
+      if (dragging) { dragging.fx = null; dragging.fy = null; dragging = null; simulation.alphaTarget(0); }
+      pinchStartDist = touchDist(e.touches[0], e.touches[1]);
+      pinchStartK = transform.k;
+    }
+  }, { passive: false });
+
+  canvas.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    if (e.touches.length === 1) {
+      const pos = getTouchPos(e.touches[0]);
+      if (dragging) {
+        const w = screenToWorld(pos.x, pos.y);
+        dragging.fx = w.x;
+        dragging.fy = w.y;
+        simulation.alpha(0.1).restart();
+      } else {
+        transform.x = e.touches[0].clientX - dragOffset.x;
+        transform.y = e.touches[0].clientY - dragOffset.y;
+        scheduleDraw();
+      }
+    } else if (e.touches.length === 2 && pinchStartDist) {
+      const dist = touchDist(e.touches[0], e.touches[1]);
+      const scale = dist / pinchStartDist;
+      const newK = Math.max(0.2, Math.min(4, pinchStartK * scale));
+      // Zoom toward midpoint of pinch
+      const mid = {
+        x: (getTouchPos(e.touches[0]).x + getTouchPos(e.touches[1]).x) / 2,
+        y: (getTouchPos(e.touches[0]).y + getTouchPos(e.touches[1]).y) / 2,
+      };
+      const ratio = newK / transform.k;
+      transform.x = mid.x - (mid.x - transform.x) * ratio;
+      transform.y = mid.y - (mid.y - transform.y) * ratio;
+      transform.k = newK;
+      scheduleDraw();
+    }
+  }, { passive: false });
+
+  canvas.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    if (e.changedTouches.length === 1 && touchStartPos) {
+      const pos = getTouchPos(e.changedTouches[0]);
+      const moved = Math.hypot(pos.x - touchStartPos.x, pos.y - touchStartPos.y);
+      if (dragging) {
+        if (moved < 8) selectNode(dragging); // tap → select
+        dragging.fx = null;
+        dragging.fy = null;
+        dragging = null;
+        simulation.alphaTarget(0);
+      } else if (moved < 8) {
+        // Tap on blank space → deselect
+        selectedNode = null;
+        panel.classList.add("hidden");
+        scheduleDraw();
+      }
+    }
+    if (e.touches.length < 2) { pinchStartDist = null; }
+    touchStartPos = null;
   }, { passive: false });
 
   // ─── Info Panel ────────────────────────────────────
