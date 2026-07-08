@@ -172,7 +172,7 @@ const PROJECTS = [
     description: "Directed by BRTHR, produced by Chris Rutledge for MSCHF (2023).",
     url: "https://vimeo.com/1180282380",
     thumb: "img/mschf-reebok-thumb.jpg",
-    people: ["chris-rutledge", "brthr", "mschf"],
+    people: ["chris-rutledge", "brthr", "mschf", "chippy", "sander-joon"],
   },
   {
     id: "rippling-superbowl",
